@@ -2,38 +2,29 @@ import streamlit as st
 import requests
 import random
 
-# ---- Load Country & Flag Data ----
+st.set_page_config(page_title="🌍 Country Quiz PWA", layout="wide")
+
 @st.cache_data
 def fetch_countries():
     url = "https://restcountries.com/v3.1/all"
     response = requests.get(url).json()
     country_data = {}
-
     for country in response:
         name = country["name"]["common"]
         flag_url = country["flags"]["png"]
-        country_data[name] = flag_url  # Store country name -> flag URL
-    
+        country_data[name] = flag_url  
     return country_data
 
 country_flags = fetch_countries()
 countries = list(country_flags.keys())
 
-# ---- Quiz Logic ----
 def get_quiz_data():
-    """Generate a question for the country-flag quiz."""
     correct_country = random.choice(countries)
     correct_flag = country_flags[correct_country]
-    
-    # Pick 3 incorrect flags
     wrong_countries = random.sample([c for c in countries if c != correct_country], 3)
     choices = [correct_country] + wrong_countries
     random.shuffle(choices)
-    
     return correct_country, correct_flag, choices
-
-# ---- Streamlit UI ----
-st.set_page_config(page_title="🌍 Country Quiz PWA", layout="wide")
 
 st.title("🌍 Country Quiz")
 
@@ -51,9 +42,12 @@ with tab1:
             st.image(country_flags[choice], width=100)
             if st.button(choice, key=f"q1_{choice}"):
                 if choice == correct_country:
-                    st.success("✅ Correct!")
+                    with st.expander("✅ Correct! 🎉"):
+                        st.success(f"Good job! {correct_country} is the correct answer.")
                 else:
-                    st.error("❌ Wrong!")
+                    with st.expander("❌ Wrong Answer!"):
+                        st.error(f"Oops! The correct answer is **{correct_country}**.")
+                        st.image(correct_flag, width=150)
 
 # ---- Quiz 2: Flag → Country ----
 with tab2:
@@ -64,9 +58,12 @@ with tab2:
     for choice in choices:
         if st.button(choice, key=f"q2_{choice}"):
             if choice == correct_country:
-                st.success("✅ Correct!")
+                with st.expander("✅ Correct! 🎉"):
+                    st.success(f"Good job! {correct_country} is the correct answer.")
             else:
-                st.error("❌ Wrong!")
+                with st.expander("❌ Wrong Answer!"):
+                    st.error(f"Oops! The correct answer is **{correct_country}**.")
+                    st.image(correct_flag, width=150)
 
 # ---- Wikipedia Country List ----
 with tab3:
