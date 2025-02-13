@@ -2,7 +2,8 @@ import streamlit as st
 import requests
 import random
 
-st.set_page_config(page_title="🌍 Country Quiz PWA", layout="wide")
+# st.set_page_config(page_title="🌍 Country Quiz PWA", layout="wide")
+st.set_page_config(page_title="🌍 Country Quiz PWA")
 
 @st.cache_data
 def fetch_countries():
@@ -10,7 +11,8 @@ def fetch_countries():
     response = requests.get(url).json()
     country_data = {}
     for country in response:
-        name = country["name"]["common"]
+        # name = country["name"]["common"]
+        name = country["translations"]["fra"]["common"]
         flag_url = country["flags"]["png"]
         country_data[name] = flag_url  
     return country_data
@@ -59,7 +61,7 @@ with tab1:
 
     for i, (num, choice) in enumerate(choice_numbers.items()):
         with cols[i]:
-            st.image(country_flags[choice], width=100)
+            st.image(country_flags[choice], width=50%)
             if st.button(str(num), key=f"q1_{num}"):  # Button displays number instead of name
                 st.session_state.selected_number = num  # Store the selected number
 
@@ -72,7 +74,7 @@ with tab1:
         else:
             with st.expander("❌ Wrong Answer!"):
                 st.error(f"Oops! The correct answer is **{correct_country}**.")
-                st.image(correct_flag, width=150)
+                st.image(correct_flag, width=100)
 
     # Number-to-country mapping (hidden via CSS)
     st.markdown(
@@ -102,7 +104,7 @@ with tab1:
 # ---- Quiz 2: Flag → Country ----
 with tab2:
     st.subheader("Which country does this flag belong to?")
-    
+    cols = st.columns(4)
     # Initialize quiz in session state if not already set
     if "quiz2" not in st.session_state:
         correct_country, correct_flag, choices = get_quiz_data()
@@ -116,7 +118,7 @@ with tab2:
         correct_flag = st.session_state.quiz2["correct_flag"]
         choices = st.session_state.quiz2["choices"]
 
-    st.image(correct_flag, width=150)
+    st.image(correct_flag, width=100)
 
     if "selected_q2" not in st.session_state:
         st.session_state.selected_q2 = None  # Track user's choice
@@ -134,7 +136,7 @@ with tab2:
         else:
             with st.expander("❌ Wrong Answer!"):
                 st.error(f"Oops! The correct answer is **{correct_country}**.")
-                st.image(correct_flag, width=150)
+                st.image(correct_flag, width=100)
 
     # Button to generate a new quiz round
     if st.button("🔄 New Question", key="new_q2"):
