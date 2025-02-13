@@ -11,8 +11,8 @@ def fetch_countries():
     response = requests.get(url).json()
     country_data = {}
     for country in response:
-        # name = country["name"]["common"]
-        name = country["translations"]["fra"]["common"]
+        name = country["name"]["common"]
+        # name = country["translations"]["fra"]["common"]
         flag_url = country["flags"]["png"]
         country_data[name] = flag_url  
     return country_data
