@@ -61,7 +61,7 @@ with tab1:
 
     for i, (num, choice) in enumerate(choice_numbers.items()):
         with cols[i]:
-            st.image(country_flags[choice], width=50%)
+            st.image(country_flags[choice], width=120)
             if st.button(str(num), key=f"q1_{num}"):  # Button displays number instead of name
                 st.session_state.selected_number = num  # Store the selected number
 
